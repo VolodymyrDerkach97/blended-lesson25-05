@@ -1,5 +1,3 @@
-
-
 import {
   Container,
   Grid,
@@ -10,12 +8,11 @@ import {
   Text,
   Todo,
 } from 'components';
-import { useLocalStorage } from 'hooks';
-import { useSelector } from 'react-redux';
+import { useFetchContactsQuery } from 'redux/todoSlice';
 
 export const App = () => {
   // const [todos, setTodos] = useLocalStorage('todosKey', []);
-  const todos = useSelector(state => state.todos);
+  const { data: todos } = useFetchContactsQuery();
 
   return (
     <>

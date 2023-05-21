@@ -2,13 +2,18 @@ import { RiDeleteBinLine } from 'react-icons/ri';
 import { Text } from 'components';
 import { DeleteButton, TodoWrapper } from './Todo.styled';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { deleteTodo, editTodo } from 'redux/todoSlice';
+
+import {
+  useDeleteContactMutation,
+  useUpdateContactMutation,
+} from 'redux/todoSlice';
 
 export const Todo = ({ text, counter, onClick, id, onEdit }) => {
   const [newText, setNewText] = useState(text);
   const [isEdit, setIsEdit] = useState(false);
-  const dispatch = useDispatch();
+
+  const [updateTodo, { isLoading }] = useUpdateContactMutation();
+  const [deleteTodo] = useDeleteContactMutation();
   return (
     <>
       <TodoWrapper>
@@ -22,16 +27,17 @@ export const Todo = ({ text, counter, onClick, id, onEdit }) => {
             value={newText}
             onBlur={() => {
               setIsEdit(false);
-              dispatch(editTodo({ id, text: newText }));
-              // onEdit({ id, text: newText });
+              updateTodo({ id, text: newText });
             }}
             onChange={e => setNewText(e.target.value)}
           />
         ) : (
-          <Text onClick={() => setIsEdit(true)}>{text}</Text>
+          <Text onClick={() => setIsEdit(true)}>
+            {isLoading ? 'завантаження...' : text}
+          </Text>
         )}
 
-        <DeleteButton type="button" onClick={() => dispatch(deleteTodo(id))}>
+        <DeleteButton type="button" onClick={() => deleteTodo(id)}>
           <RiDeleteBinLine size={24} />
         </DeleteButton>
       </TodoWrapper>
